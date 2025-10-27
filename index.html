@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LyRise n8n Integration</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    form {
+      background: white;
+      padding: 20px 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, textarea, button {
+      width: 100%;
+      margin: 8px 0;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #response {
+      margin-top: 15px;
+      font-weight: bold;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>LyRise n8n Integration Demo 🌐</h2>
+  <form id="webhookForm">
+    <input type="text" id="name" placeholder="Enter your name" required />
+    <textarea id="message" placeholder="Enter a message" required></textarea>
+    <button type="submit">Send</button>
+  </form>
+
+  <p id="response"></p>
+
+  <script>
+    document.getElementById("webhookForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById("name").value;
+      const message = document.getElementById("message").value;
+
+      const responseBox = document.getElementById("response");
+
+      try {
+        const res = await fetch("https://rowanhossam.app.n8n.cloud/webhook/lyrise-test ", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, message })
+        });
+
+        const data = await res.json();
+        responseBox.innerText = data.response || "Message sent successfully!";
+
+        // Bonus: change background color based on workflow output
+        if (data.color) {
+            document.body.style.backgroundColor = data.color;
+        }
+
+      } catch (err) {
+        responseBox.innerText = "Error sending data!";
+        console.error(err);
+      }
+    });
+  </script>
+
+</body>
+</html>
